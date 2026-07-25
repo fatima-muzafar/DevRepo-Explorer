@@ -10,9 +10,33 @@ export interface GitHubApiError {
 
 const GITHUB_API_BASE_URL = 'https://api.github.com'
 
+const normalizeGitHubError = (message: string | undefined, status?: number) => {
+  if (!message) {
+    return 'We could not reach GitHub right now. Please check your connection and try again.'
+  }
+
+  if (status === 403 || status === 429) {
+    return 'GitHub is temporarily rate-limiting requests. Please wait a moment and try again.'
+  }
+
+  if (status === 404) {
+    return 'We could not find the repository information you requested.'
+  }
+
+  if (status === 401) {
+    return 'GitHub authentication failed. Please try again shortly.'
+  }
+
+  if (message.includes('fetch')) {
+    return 'We could not reach GitHub right now. Please check your connection and try again.'
+  }
+
+  return message
+}
+
 export const searchRepositories = async (query: string): Promise<GitHubSearchResponse> => {
   if (!query.trim()) {
-    throw { message: 'Search query cannot be empty.' } as GitHubApiError
+    throw { message: 'Please enter a repository name to search.' } as GitHubApiError
   }
 
   const url = `${GITHUB_API_BASE_URL}/search/repositories?q=${encodeURIComponent(query.trim())}`
@@ -41,7 +65,7 @@ export const searchRepositories = async (query: string): Promise<GitHubSearchRes
   } catch (error) {
     if (error instanceof Error) {
       throw {
-        message: error.message,
+        message: normalizeGitHubError(error.message),
       } as GitHubApiError
     }
 
@@ -68,8 +92,10 @@ export const getRepositoryDetails = async (owner: string, repo: string): Promise
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null)
-      const message =
-        errorData?.message || `GitHub API request failed with status ${response.status}`
+      const message = normalizeGitHubError(
+        errorData?.message || `GitHub API request failed with status ${response.status}`,
+        response.status,
+      )
 
       throw {
         message,
@@ -83,7 +109,7 @@ export const getRepositoryDetails = async (owner: string, repo: string): Promise
   } catch (error) {
     if (error instanceof Error) {
       throw {
-        message: error.message,
+        message: normalizeGitHubError(error.message),
       } as GitHubApiError
     }
 

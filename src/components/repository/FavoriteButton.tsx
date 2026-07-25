@@ -52,7 +52,8 @@ const FavoriteButton = ({ repository }: FavoriteButtonProps) => {
         disabled={isSubmitting || loading}
         aria-busy={isSubmitting}
         aria-live="polite"
-        className={`inline-flex min-w-[9.5rem] items-center justify-center rounded-full border px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:cursor-not-allowed disabled:opacity-70 ${
+        aria-pressed={isSaved}
+        className={`inline-flex min-w-38 items-center justify-center rounded-full border px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:cursor-not-allowed disabled:opacity-70 ${
           isSaved
             ? 'border-cyan-400 bg-cyan-500/15 text-cyan-300'
             : 'border-slate-700 bg-slate-800 text-slate-200 hover:border-cyan-400 hover:text-cyan-300'

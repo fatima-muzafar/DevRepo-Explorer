@@ -23,12 +23,13 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
 
   const value = useMemo<FavoritesContextValue>(
     () => favoritesHook,
-    [favoritesHook.favorites, favoritesHook.loading, favoritesHook.error, favoritesHook.loadFavorites, favoritesHook.saveFavorite, favoritesHook.removeFavorite, favoritesHook.isFavorite],
+    [favoritesHook],
   )
 
   return <FavoritesContext.Provider value={value}>{children}</FavoritesContext.Provider>
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useFavoritesContext = () => {
   const context = useContext(FavoritesContext)
 

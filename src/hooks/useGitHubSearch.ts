@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { searchRepositories as searchGitHubRepositories } from '../services/githubApi'
 import type { Repository } from '../types/repository'
 
@@ -15,15 +15,38 @@ export const useGitHubSearch = (): UseGitHubSearchResult => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasSearched, setHasSearched] = useState(false)
+  const activeRequestIdRef = useRef(0)
+  const activeQueryRef = useRef<string | null>(null)
+  const inFlightRef = useRef(false)
 
   const searchRepositories = async (query: string) => {
+    const normalizedQuery = query.trim()
+
+    if (!normalizedQuery) {
+      setHasSearched(true)
+      setRepositories([])
+      setError('Please enter a repository name to search.')
+      return
+    }
+
+    if (activeQueryRef.current === normalizedQuery && inFlightRef.current) {
+      return
+    }
+
+    const requestId = activeRequestIdRef.current + 1
+    activeRequestIdRef.current = requestId
+    activeQueryRef.current = normalizedQuery
+    inFlightRef.current = true
+
     setHasSearched(true)
     setLoading(true)
     setError(null)
 
     try {
-      const response = await searchGitHubRepositories(query)
-      setRepositories(response.items)
+      const response = await searchGitHubRepositories(normalizedQuery)
+      if (requestId === activeRequestIdRef.current) {
+        setRepositories(response.items)
+      }
     } catch (err) {
       const message =
         err &&
@@ -33,10 +56,15 @@ export const useGitHubSearch = (): UseGitHubSearchResult => {
           ? err.message
           : 'Something went wrong while searching repositories.'
 
-      setError(message)
-      setRepositories([])
+      if (requestId === activeRequestIdRef.current) {
+        setError(message)
+        setRepositories([])
+      }
     } finally {
-      setLoading(false)
+      if (requestId === activeRequestIdRef.current) {
+        setLoading(false)
+        inFlightRef.current = false
+      }
     }
   }
 

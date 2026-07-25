@@ -34,11 +34,16 @@ const Login = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-950/70 p-6 shadow-lg" noValidate>
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-950/70 p-6 shadow-lg"
+          noValidate
+          aria-describedby={error ? 'login-error' : undefined}
+        >
           <h2 className="text-xl font-semibold text-white">Login</h2>
 
           {error && (
-            <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+            <div id="login-error" role="alert" className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
               {error}
             </div>
           )}
@@ -54,6 +59,7 @@ const Login = () => {
                 type="email"
                 autoComplete="email"
                 required
+                aria-invalid={Boolean(error)}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
@@ -71,6 +77,7 @@ const Login = () => {
                 type="password"
                 autoComplete="current-password"
                 required
+                aria-invalid={Boolean(error)}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"

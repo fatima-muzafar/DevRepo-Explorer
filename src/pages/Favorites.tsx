@@ -1,10 +1,10 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import RepositoryCard from '../components/repository/RepositoryCard'
 import { useFavoritesContext } from '../context/FavoritesContext'
 import type { Repository } from '../types/repository'
 
 const Favorites = () => {
-  const { favorites, loading, error } = useFavoritesContext()
+  const { favorites, loading, error, loadFavorites } = useFavoritesContext()
 
   const repositories = useMemo<Repository[]>(() => {
     return favorites.map((favorite) => ({
@@ -26,6 +26,10 @@ const Favorites = () => {
       updated_at: '',
     }))
   }, [favorites])
+
+  const handleRetry = useCallback(() => {
+    void loadFavorites()
+  }, [loadFavorites])
 
   return (
     <section className="bg-slate-950 px-4 py-16 sm:px-6 lg:px-8">
@@ -51,8 +55,17 @@ const Favorites = () => {
         )}
 
         {!loading && error && (
-          <div role="alert" className="mt-8 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-            {error}
+          <div className="mt-8 space-y-3">
+            <div role="alert" className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+              {error}
+            </div>
+            <button
+              type="button"
+              onClick={handleRetry}
+              className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-cyan-400 hover:text-cyan-300"
+            >
+              Try again
+            </button>
           </div>
         )}
 
@@ -66,9 +79,11 @@ const Favorites = () => {
         )}
 
         {!loading && !error && favorites.length > 0 && (
-          <div className="mt-8 grid gap-6">
+          <div className="mt-8 grid gap-6" role="list">
             {repositories.map((repository) => (
-              <RepositoryCard key={repository.id} repository={repository} />
+              <div key={repository.id} role="listitem">
+                <RepositoryCard repository={repository} />
+              </div>
             ))}
           </div>
         )}

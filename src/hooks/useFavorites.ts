@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { getFavorites, isFavorite, removeFavorite, saveFavorite as saveFavoriteService } from '../services/favoritesService'
 import type { FavoriteRepository } from '../types/favorite'
@@ -18,6 +18,7 @@ export const useFavorites = (): UseFavoritesResult => {
   const [favorites, setFavorites] = useState<FavoriteRepository[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const loadingRef = useRef(false)
 
   const loadFavorites = useCallback(async () => {
     if (!currentUser?.uid) {
@@ -25,6 +26,12 @@ export const useFavorites = (): UseFavoritesResult => {
       setError(null)
       return
     }
+
+    if (loadingRef.current) {
+      return
+    }
+
+    loadingRef.current = true
 
     try {
       setLoading(true)
@@ -35,8 +42,9 @@ export const useFavorites = (): UseFavoritesResult => {
       setError(err instanceof Error ? 'We could not load your saved repositories. Please try again.' : 'Failed to load favorites.')
     } finally {
       setLoading(false)
+      loadingRef.current = false
     }
-  }, [currentUser?.uid])
+  }, [currentUser])
 
   const saveFavorite = useCallback(async (repository: FavoriteRepository) => {
     if (!currentUser?.uid) {
@@ -51,7 +59,7 @@ export const useFavorites = (): UseFavoritesResult => {
       setError(err instanceof Error ? 'We could not save this repository. Please try again.' : 'Failed to save favorite.')
       throw err
     }
-  }, [currentUser?.uid, loadFavorites])
+  }, [currentUser, loadFavorites])
 
   const removeFavoriteById = useCallback(async (repositoryId: string) => {
     if (!currentUser?.uid) {
@@ -66,7 +74,7 @@ export const useFavorites = (): UseFavoritesResult => {
       setError(err instanceof Error ? 'We could not remove this repository. Please try again.' : 'Failed to remove favorite.')
       throw err
     }
-  }, [currentUser?.uid, loadFavorites])
+  }, [currentUser, loadFavorites])
 
   const checkIsFavorite = useCallback(async (repositoryId: string) => {
     if (!currentUser?.uid) {
@@ -79,10 +87,14 @@ export const useFavorites = (): UseFavoritesResult => {
       setError(err instanceof Error ? err.message : 'Failed to check favorite status.')
       return false
     }
-  }, [currentUser?.uid])
+  }, [currentUser])
 
   useEffect(() => {
-    void loadFavorites()
+    const timeoutId = window.setTimeout(() => {
+      void loadFavorites()
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
   }, [loadFavorites])
 
   return {

@@ -12,13 +12,13 @@ const RepositoryDetailsCard = ({ repository }: RepositoryDetailsCardProps) => {
   ]
 
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-8 shadow-sm">
+    <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-8 shadow-sm" aria-labelledby="repository-overview-heading">
       <div className="flex flex-col gap-6">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400">
             Repository Overview
           </p>
-          <h1 className="mt-3 text-3xl font-semibold text-white">{repository.name}</h1>
+          <h2 id="repository-overview-heading" className="mt-3 text-3xl font-semibold text-white">{repository.name}</h2>
           <p className="mt-3 text-lg text-slate-300">
             {repository.description || 'No description available.'}
           </p>

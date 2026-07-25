@@ -49,8 +49,17 @@ const RepositoryDetails = () => {
         )}
 
         {!loading && error && (
-          <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-            {error}
+          <div className="space-y-3">
+            <div role="alert" className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+              {error}
+            </div>
+            <button
+              type="button"
+              onClick={() => void loadRepositoryDetails()}
+              className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-cyan-400 hover:text-cyan-300"
+            >
+              Try again
+            </button>
           </div>
         )}
 

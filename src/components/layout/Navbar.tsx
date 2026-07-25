@@ -17,19 +17,22 @@ const Navbar = () => {
 
   return (
     <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <NavLink to="/" className="text-lg font-semibold tracking-tight text-white transition hover:text-cyan-400">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-8">
+        <NavLink
+          to="/"
+          className="text-base font-semibold tracking-tight text-white transition hover:text-cyan-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:text-lg"
+        >
           DevRepo Explorer
         </NavLink>
 
-        <nav aria-label="Primary navigation" className="flex flex-wrap items-center justify-end gap-2 sm:gap-4">
+        <nav aria-label="Primary navigation" className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-4">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
                 [
-                  'rounded-md px-3 py-2 text-sm font-medium transition',
+                  'rounded-md px-2.5 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:px-3',
                   isActive
                     ? 'bg-cyan-500/15 text-cyan-400'
                     : 'text-slate-300 hover:bg-slate-800 hover:text-white',
@@ -44,7 +47,7 @@ const Navbar = () => {
             <button
               type="button"
               onClick={() => void logout()}
-              className="rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
+              className="rounded-md px-2.5 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:px-3"
             >
               Logout
             </button>
