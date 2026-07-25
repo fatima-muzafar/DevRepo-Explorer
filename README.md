@@ -54,37 +54,37 @@ This project demonstrates modern frontend development practices, including React
 
 ### 🏠 Home Page
 
-![Home Page](assets/home-page.png)
+![Home Page](src/assets/home-page.png)
 
 ---
 
 ### 📄 Repository Details
 
-![Repository Details](assets/repository-details.png)
+![Repository Details](src/assets/repository-details.png)
 
 ---
 
 ### ⭐ Favorites Page
 
-![Favorites Page](assets/favorites-page.png)
+![Favorites Page](src/assets/favorites-page.png)
 
 ---
 
 ### 🔐 Login Page
 
-![Login Page](assets/login-page.png)
+![Login Page](src/assets/login-page.png)
 
 ---
 
 ### 📝 Register Page
 
-![Register Page](assets/register-page.png)
+![Register Page](src/assets/register-page.png)
 
 ---
 
 ### 📱 Mobile Responsive View
 
-![Mobile Responsive View](assets/mobile-home.png)
+![Mobile Home](src/assets/mobile-home.png)
 
 ---
 
